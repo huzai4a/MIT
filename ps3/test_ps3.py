@@ -44,6 +44,82 @@ def get_word_score(word, n):
     wordScore = component1*component2
 
     return wordScore
+
+def update_hand(hand, word):
+    """
+    Does NOT assume that hand contains every letter in word at least as
+    many times as the letter appears in word. Letters in word that don't
+    appear in hand should be ignored. Letters that appear in word more times
+    than in hand should never result in a negative count; instead, set the
+    count in the returned hand to 0 (or remove the letter from the
+    dictionary, depending on how your code is structured). 
+
+    Updates the hand: uses up the letters in the given word
+    and returns the new hand, without those letters in it.
+
+    Has no side effects: does not modify hand.
+
+    word: string
+    hand: dictionary (string -> int)    
+    returns: dictionary (string -> int)
+    """
+    strippedString = word.lower().replace(" ", "")
+    # copys the hand
+    newHand = hand.copy()
+    # for each letter in user's word
+    for letters in strippedString:
+        # if any letter is in the new hand
+        if letters in newHand:
+            # if that letter has a value of 1 remove it
+            if newHand[letters] <= 1:
+                newHand.pop(letters)
+            # otherwise remove one from the new hand at key letters
+            else:
+                newHand[letters] -= 1
+        # doesn't do anything if the letter isn't in the hand
+    
+    return newHand
+
+def is_valid_word(word, hand, word_list):
+    """
+    Returns True if word is in the word_list and is entirely
+    composed of letters in the hand. Otherwise, returns False.
+    Does not mutate hand or word_list.
+   
+    word: string
+    hand: dictionary (string -> int)
+    word_list: list of lowercase strings
+    returns: boolean
+    """
+    
+    # makes the string spaceless and lowercase
+    strippedString = word.lower().replace(" ", "")
+    tempHand = hand.copy()
+
+    # continue validation if in word list
+    if strippedString in word_list:
+        # for each letter in the word
+        for letters in strippedString:
+            # if any letter is in the hand
+            if letters in hand:
+                # remove 1 from tempHand
+                tempHand[letters] -= 1
+                # if there's a negative that means
+                # that too many of a letter was used
+                if tempHand[letters] < 0:
+                    return False
+            # otherwise letter was not in hand,
+            # return false
+            else:
+                return False
+    # otherwise is not a valid word from the list
+    else:
+        return False
+    
+    # if it passes all previous validation the word
+    # is valid, return true
+    return True
+
 # MY CODE
 
 #

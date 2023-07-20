@@ -181,9 +181,22 @@ def update_hand(hand, word):
     hand: dictionary (string -> int)    
     returns: dictionary (string -> int)
     """
-
-    pass  # TO DO... Remove this line when you implement this function
-
+    strippedString = word.lower().replace(" ", "")
+    # copys the hand
+    newHand = hand.copy()
+    # for each letter in user's word
+    for letters in strippedString:
+        # if any letter is in the new hand
+        if letters in newHand:
+            # if that letter has a value of 1 remove it
+            if newHand[letters] <= 1:
+                newHand.pop(letters)
+            # otherwise remove one from the new hand at key letters
+            else:
+                newHand[letters] -= 1
+        # doesn't do anything if the letter isn't in the hand
+    
+    return newHand
 #
 # Problem #3: Test word validity
 #
@@ -198,8 +211,34 @@ def is_valid_word(word, hand, word_list):
     word_list: list of lowercase strings
     returns: boolean
     """
+    
+    # makes the string spaceless and lowercase
+    strippedString = word.lower().replace(" ", "")
+    tempHand = hand.copy()
 
-    pass  # TO DO... Remove this line when you implement this function
+    # continue validation if in word list
+    if strippedString in word_list:
+        # for each letter in the word
+        for letters in strippedString:
+            # if any letter is in the hand
+            if letters in hand:
+                # remove 1 from tempHand
+                tempHand[letters] -= 1
+                # if there's a negative that means
+                # that too many of a letter was used
+                if tempHand[letters] < 0:
+                    return False
+            # otherwise letter was not in hand,
+            # return false
+            else:
+                return False
+    # otherwise is not a valid word from the list
+    else:
+        return False
+    
+    # if it passes all previous validation the word
+    # is valid, return true
+    return True
 
 #
 # Problem #5: Playing a hand
