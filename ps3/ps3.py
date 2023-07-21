@@ -149,11 +149,16 @@ def deal_hand(n):
     
     hand={}
     num_vowels = int(math.ceil(n / 3))
+    hand["*"] = 1
 
-    for i in range(num_vowels):
+    # the -1 is due to the addition of the wildcard ( * ),
+    # which is taking the place of a vowel
+    for i in range(num_vowels-1):
         x = random.choice(VOWELS)
         hand[x] = hand.get(x, 0) + 1
     
+    # don't need any change here since the - 1 is taking
+    # from the slots of num_vowels, not the ones after it
     for i in range(num_vowels, n):    
         x = random.choice(CONSONANTS)
         hand[x] = hand.get(x, 0) + 1
