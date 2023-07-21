@@ -333,7 +333,7 @@ def play_hand(hand, word_list):
         print("Ran out of letters.", end=" ")
             
     # prints the total score regardless of end case
-    print("Total score:", tempScore, "points")
+    print("Total score of this hand:", tempScore, "points")
 
     # returns the score from the current hand
     return tempScore
@@ -372,8 +372,19 @@ def substitute_hand(hand, letter):
     returns: dictionary (string -> int)
     """
     
-    pass  # TO DO... Remove this line when you implement this function
-       
+    # if the letter's not in the hand, it remains the same
+    if not(letter in hand):
+        pass
+    else:
+       while True:
+           randomLetter = random.choice(VOWELS+CONSONANTS)
+           # if the random letter isn't in the hand and is different from
+           # the old letter, replace the key and break from while
+           if not (randomLetter in hand) and not (randomLetter == letter):
+               hand[randomLetter] = hand.pop(letter)
+               break
+    
+    return hand
     
 def play_game(word_list):
     """
@@ -406,9 +417,105 @@ def play_game(word_list):
     word_list: list of lowercase strings
     """
     
-    print("play_game not implemented.") # TO DO... Remove this line when you implement this function
+    # initializing totalScore variable
+    totalScore = 0
+    # starts as false so that user is asked for replay and substitute
+    replayed = False
+    substituted = False
+    # gets a number of hands to play
+    numOfHands = validInt("Enter total number of hands: ")
     
+    # continues while the chosen number of hands hasn't been played
+    while numOfHands > 0:
+        # gets a new hand and displays it
+        tempHand = deal_hand(HAND_SIZE)
+        print("Current hand:", end=" ")
+        display_hand(tempHand)
 
+        # if substitution has already been used then nothing needs to be done
+        if substituted:
+            pass
+        else:
+            # begins input validation for substituting a letter
+            subChoice = yesOrNo("Would you like to substitute a letter?")
+            if subChoice == "yes":
+                # gets letter to replace and replaces it in hand
+                replaceLet = validLetter("What letter would you like to replace?")
+                tempHand = substitute_hand(tempHand, replaceLet)
+                substituted = True
+            # otherwise the user says no it prints an empty line and leaves loop
+            else:
+                print()
+
+        # plays the game and stores hand score
+        handScore = play_hand(tempHand, word_list)
+        # separates the current hand playthrough and the following messages
+        print("-----------------")
+
+        # if it has already been replayed, pass
+        if replayed:
+            pass
+        # otherwise begin replay validation
+        else:
+            # asks user if they would like to replay
+            replayChoice = yesOrNo("Would you like to replay this hand? You only get this option once.")
+            # if they want to replay, the game restarts with the same hand
+            if replayChoice == "yes":
+                replayScore = play_hand(tempHand, word_list)
+                # keeps the greater of the two scores
+                if replayScore > handScore:
+                    handScore = replayScore
+                # this makes the user unable to replay again
+                replayed = True
+            # otherwise it passes
+            else:
+                pass
+
+            # adds the score from the current hand to the total
+            totalScore += handScore
+            numOfHands -= 1
+    
+    print("Total score over all hands:", totalScore)
+
+def validLetter(prompt):
+    """
+    prompt: string of message to give the user when prompting for input
+    returns: valid singular letter
+    """
+    while True:
+        userInput = input(prompt)
+        if len(userInput) > 1: # and userInput.isalpha()
+            print("Invalid input. Please enter a singular letter")
+        else:
+            return userInput
+
+
+
+def validInt(prompt):        
+    """
+    prompt: string of message to give the user when prompting for input
+    returns: valid integer
+    """
+    while True:
+        userInput = input(prompt)
+
+        if userInput.isdigit():
+            return int(userInput)
+        else:
+            print("Invalid number, make sure to enter an integer.")
+
+def yesOrNo(prompt):
+    """
+    prompt: string of message to give the user when prompting for input
+    returns: string of "yes" or "no"
+    """
+    while True:
+        userString = input(prompt)
+
+        if not(userString == "yes") and not(userString == "no"):
+            print("Invalid input, say yes or no.")
+        else:
+            return userString
 
 #
 # Build data structures used for entire session and play game
