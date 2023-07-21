@@ -324,7 +324,7 @@ def play_hand(hand, word_list):
                 tempScore += get_word_score(inputtedString, calculate_handlen(tempHand))
                 print("\"" + inputtedString + "\" earned", get_word_score(inputtedString, calculate_handlen(tempHand)), "points. Total:", tempScore, "points")
             else:
-                print("That is not a valid word. Please choose another word.")
+                print("'" + inputtedString + "' is not a valid word.")
 
         tempHand = update_hand(tempHand, inputtedString)
     
@@ -437,10 +437,10 @@ def play_game(word_list):
             pass
         else:
             # begins input validation for substituting a letter
-            subChoice = yesOrNo("Would you like to substitute a letter?")
+            subChoice = yesOrNo("Would you like to substitute a letter? ")
             if subChoice == "yes":
                 # gets letter to replace and replaces it in hand
-                replaceLet = validLetter("What letter would you like to replace?")
+                replaceLet = validLetter("What letter would you like to replace? ")
                 tempHand = substitute_hand(tempHand, replaceLet)
                 substituted = True
             # otherwise the user says no it prints an empty line and leaves loop
@@ -458,7 +458,7 @@ def play_game(word_list):
         # otherwise begin replay validation
         else:
             # asks user if they would like to replay
-            replayChoice = yesOrNo("Would you like to replay this hand? You only get this option once.")
+            replayChoice = yesOrNo("Would you like to replay this hand? You only get this option once. ")
             # if they want to replay, the game restarts with the same hand
             if replayChoice == "yes":
                 replayScore = play_hand(tempHand, word_list)
