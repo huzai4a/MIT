@@ -1,9 +1,16 @@
 from ps3 import *
+import random
+import math
 SCRABBLE_LETTER_VALUES = {
-    'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10
+    'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10, '*': 0
 }
 
 # MY CODE
+
+VOWELS = 'aeiou'
+CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
+HAND_SIZE = 7
+
 def get_word_score(word, n):
     """
     Returns the score for a word. Assumes the word is a
@@ -96,29 +103,74 @@ def is_valid_word(word, hand, word_list):
     strippedString = word.lower().replace(" ", "")
     tempHand = hand.copy()
 
-    # continue validation if in word list
-    if strippedString in word_list:
-        # for each letter in the word
-        for letters in strippedString:
-            # if any letter is in the hand
-            if letters in hand:
-                # remove 1 from tempHand
-                tempHand[letters] -= 1
-                # if there's a negative that means
-                # that too many of a letter was used
-                if tempHand[letters] < 0:
-                    return False
-            # otherwise letter was not in hand,
-            # return false
-            else:
-                return False
-    # otherwise is not a valid word from the list
-    else:
+    # continue wildcard validation if "*" is present
+    if "*" in strippedString:
+        # loops through to check each vowel case
+        for i in range(len(VOWELS)):
+            # if the wildcard replaced with any vowel
+            # matches a word, string is valid
+            if strippedString.replace("*", VOWELS[i]) in word_list:
+                return True
+        # if loop is completed, no word matches
         return False
+    else:
+        # continue validation if in word list
+        if strippedString in word_list:
+            # for each letter in the word
+            for letters in strippedString:
+                # if any letter is in the hand
+                if letters in hand:
+                    # remove 1 from tempHand
+                    tempHand[letters] -= 1
+                    # if there's a negative that means
+                    # that too many of a letter was used
+                    if tempHand[letters] < 0:
+                        return False
+                # otherwise letter was not in hand, invalid word
+                else:
+                    return False
+        # otherwise is not a valid word from the list
+        else:
+            return False
     
     # if it passes all previous validation the word
     # is valid, return true
     return True
+
+def deal_hand(n):
+    """
+    Returns a random hand containing n lowercase letters.
+    ceil(n/3) letters in the hand should be VOWELS (note,
+    ceil(n/3) means the smallest integer not less than n/3).
+
+    Hands are represented as dictionaries. The keys are
+    letters and the values are the number of times the
+    particular letter is repeated in that hand.
+
+    n: int >= 0
+    returns: dictionary (string -> int)
+    """
+    
+    hand={}
+    num_vowels = int(math.ceil(n / 3))
+    
+
+    # the -1 is due to the addition of the wildcard ( * ),
+    # which is taking the place of a vowel
+    for i in range(num_vowels-1):
+        x = random.choice(VOWELS)
+        hand[x] = hand.get(x, 0) + 1
+    
+    # adds the wildcard in
+    hand["*"] = 1
+    
+    # don't need any change here since the - 1 is taking
+    # from the slots of num_vowels, not the ones after it
+    for i in range(num_vowels, n):    
+        x = random.choice(CONSONANTS)
+        hand[x] = hand.get(x, 0) + 1
+    
+    return hand
 
 # MY CODE
 

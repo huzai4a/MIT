@@ -15,8 +15,9 @@ VOWELS = 'aeiou'
 CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
 HAND_SIZE = 7
 
+# added '*' as 0
 SCRABBLE_LETTER_VALUES = {
-    'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10
+    'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10, '*': 0
 }
 
 # -----------------------------------
@@ -149,13 +150,16 @@ def deal_hand(n):
     
     hand={}
     num_vowels = int(math.ceil(n / 3))
-    hand["*"] = 1
+    
 
     # the -1 is due to the addition of the wildcard ( * ),
     # which is taking the place of a vowel
     for i in range(num_vowels-1):
         x = random.choice(VOWELS)
         hand[x] = hand.get(x, 0) + 1
+    
+    # adds the wildcard in
+    hand["*"] = 1
     
     # don't need any change here since the - 1 is taking
     # from the slots of num_vowels, not the ones after it
@@ -221,25 +225,35 @@ def is_valid_word(word, hand, word_list):
     strippedString = word.lower().replace(" ", "")
     tempHand = hand.copy()
 
-    # continue validation if in word list
-    if strippedString in word_list:
-        # for each letter in the word
-        for letters in strippedString:
-            # if any letter is in the hand
-            if letters in hand:
-                # remove 1 from tempHand
-                tempHand[letters] -= 1
-                # if there's a negative that means
-                # that too many of a letter was used
-                if tempHand[letters] < 0:
-                    return False
-            # otherwise letter was not in hand,
-            # return false
-            else:
-                return False
-    # otherwise is not a valid word from the list
-    else:
+    # continue wildcard validation if "*" is present
+    if "*" in strippedString:
+        # loops through to check each vowel case
+        for i in range(len(VOWELS)):
+            # if the wildcard replaced with any vowel
+            # matches a word, string is valid
+            if strippedString.replace("*", VOWELS[i]) in word_list:
+                return True
+        # if loop is completed, no word matches
         return False
+    else:
+        # continue validation if in word list
+        if strippedString in word_list:
+            # for each letter in the word
+            for letters in strippedString:
+                # if any letter is in the hand
+                if letters in hand:
+                    # remove 1 from tempHand
+                    tempHand[letters] -= 1
+                    # if there's a negative that means
+                    # that too many of a letter was used
+                    if tempHand[letters] < 0:
+                        return False
+                # otherwise letter was not in hand, invalid word
+                else:
+                    return False
+        # otherwise is not a valid word from the list
+        else:
+            return False
     
     # if it passes all previous validation the word
     # is valid, return true
@@ -255,8 +269,8 @@ def calculate_handlen(hand):
     hand: dictionary (string-> int)
     returns: integer
     """
-    
-    pass  # TO DO... Remove this line when you implement this function
+    handLen = sum(hand.values())
+    return handLen
 
 def play_hand(hand, word_list):
 
@@ -292,34 +306,37 @@ def play_hand(hand, word_list):
     # BEGIN PSEUDOCODE <-- Remove this comment when you implement this function
     # Keep track of the total score
     
-    # As long as there are still letters left in the hand:
+    # initialize score as an int
+    tempScore = 0
+    # the hand is copied so as to not alter the original hand
+    tempHand = hand.copy()
+
+    while len(tempHand) > 0:
+        print("Current hand:", end=" ")
+        display_hand(tempHand)
+
+        inputtedString = input("Enter a word, or \"!!\" to indicate that you are finished: ")
+
+        if inputtedString == "!!":
+            break
+        else:
+            if is_valid_word(inputtedString, tempHand, word_list):
+                tempScore += get_word_score(inputtedString, calculate_handlen(tempHand))
+                print("\"" + inputtedString + "\" earned", get_word_score(inputtedString, calculate_handlen(tempHand)), "points. Total:", tempScore, "points")
+            else:
+                print("That is not a valid word. Please choose another word.")
+
+        tempHand = update_hand(tempHand, inputtedString)
     
-        # Display the hand
-        
-        # Ask user for input
-        
-        # If the input is two exclamation points:
-        
-            # End the game (break out of the loop)
-
+    # Tells the user they ran out of letters if hand is empty
+    if len(tempHand) <= 0:
+        print("Ran out of letters.", end=" ")
             
-        # Otherwise (the input is not two exclamation points):
+    # prints the total score regardless of end case
+    print("Total score:", tempScore, "points")
 
-            # If the word is valid:
-
-                # Tell the user how many points the word earned,
-                # and the updated total score
-
-            # Otherwise (the word is not valid):
-                # Reject invalid word (print a message)
-                
-            # update the user's hand by removing the letters of their inputted word
-            
-
-    # Game is over (user entered '!!' or ran out of letters),
-    # so tell user the total score
-
-    # Return the total score as result of function
+    # returns the score from the current hand
+    return tempScore
 
 
 
