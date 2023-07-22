@@ -7,6 +7,7 @@
 # Collaborators : <your collaborators>
 # Time spent    : <total time>
 
+from pathlib import Path
 import math
 import random
 import string
@@ -23,8 +24,7 @@ SCRABBLE_LETTER_VALUES = {
 # -----------------------------------
 # Helper code
 # (you don't need to understand this helper code)
-
-WORDLIST_FILENAME = "ps3\words.txt"
+WORDLIST_FILENAME = Path(__file__).with_name('words.txt')
 
 def load_words():
     """
