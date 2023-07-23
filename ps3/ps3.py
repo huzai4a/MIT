@@ -1,3 +1,4 @@
+# 2023-07-21
 # 6.0001 Problem Set 3
 #
 # The 6.0001 Word Game
