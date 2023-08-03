@@ -71,7 +71,9 @@ class Message(object):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        
+        self.message_text = text
+        self.valid_words = load_words(WORDLIST_FILENAME)
 
     def get_message_text(self):
         '''
@@ -79,7 +81,7 @@ class Message(object):
         
         Returns: self.message_text
         '''
-        pass #delete this line and replace with your code here
+        return self.message_text
 
     def get_valid_words(self):
         '''
@@ -88,7 +90,7 @@ class Message(object):
         
         Returns: a COPY of self.valid_words
         '''
-        pass #delete this line and replace with your code here
+        return self.valid_words.copy()
 
     def build_shift_dict(self, shift):
         '''
@@ -104,7 +106,23 @@ class Message(object):
         Returns: a dictionary mapping a letter (string) to 
                  another letter (string). 
         '''
-        pass #delete this line and replace with your code here
+        
+        # initializes the dictionary
+        shiftedDict = {}
+        # note: I realized the *2 from looking online after 
+        # feeling my method was inefficient
+        lowerAlpha = string.ascii_lowercase*2
+        upperAlpha = string. ascii_uppercase*2
+
+        # shifts each lowercase, adding to dictionary
+        for letters in lowerAlpha:
+            shiftedDict[letters] = lowerAlpha[lowerAlpha.index(letters) + shift]
+        # shifts each lowercase, adding to dictionary
+        for letters in upperAlpha:
+            shiftedDict[letters] = upperAlpha[upperAlpha.index(letters) + shift]
+
+        return shiftedDict
+
 
     def apply_shift(self, shift):
         '''
@@ -118,7 +136,22 @@ class Message(object):
         Returns: the message text (string) in which every character is shifted
              down the alphabet by the input shift
         '''
-        pass #delete this line and replace with your code here
+
+        # initialize dictionary and codedMessage string
+        shiftedDict = self.build_shift_dict(shift)
+        # strings are immutable, so list joining is more efficient
+        codedMessage = []
+
+        for letters in self.message_text:
+            # if letter is alphabetical, shift
+            if letters.isalpha():
+                codedMessage.append(shiftedDict[letters])
+            # otherwise character was non-alphabetical, skip it
+            else:
+                codedMessage.append(letters)
+                continue
+
+        return ''.join(codedMessage)
 
 class PlaintextMessage(Message):
     def __init__(self, text, shift):
