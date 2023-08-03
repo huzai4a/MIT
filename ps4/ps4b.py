@@ -3,6 +3,7 @@
 # Collaborators:
 # Time Spent: x:xx
 
+from pathlib import Path
 import string
 
 ### HELPER CODE ###
@@ -50,14 +51,14 @@ def get_story_string():
     """
     Returns: a story in encrypted text.
     """
-    f = open("story.txt", "r")
+    f = open(Path(__file__).with_name('story.txt'), "r")
     story = str(f.read())
     f.close()
     return story
 
 ### END HELPER CODE ###
 
-WORDLIST_FILENAME = 'words.txt'
+WORDLIST_FILENAME = Path(__file__).with_name('words.txt')
 
 class Message(object):
     def __init__(self, text):

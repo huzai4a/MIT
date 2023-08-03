@@ -25,7 +25,7 @@ def get_permutations(sequence):
 
     '''
 
-    # 1st base case - returns the singular character as a list
+    # base case - returns the singular character as a list
     if len(sequence) == 1:
         return [sequence]
     
