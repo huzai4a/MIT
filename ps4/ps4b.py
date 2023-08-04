@@ -17,14 +17,14 @@ def load_words(file_name):
     Depending on the size of the word list, this function may
     take a while to finish.
     '''
-    print("Loading word list from file...")
+    # print("Loading word list from file...")
     # inFile: file
     inFile = open(file_name, 'r')
     # wordlist: list of strings
     wordlist = []
     for line in inFile:
         wordlist.extend([word.lower() for word in line.split(' ')])
-    print("  ", len(wordlist), "words loaded.")
+    # print("  ", len(wordlist), "words loaded.")
     return wordlist
 
 def is_word(word_list, word):
@@ -229,7 +229,8 @@ class CiphertextMessage(Message):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        
+        Message.__init__(self, text)
 
     def decrypt_message(self):
         '''
@@ -247,22 +248,77 @@ class CiphertextMessage(Message):
         Returns: a tuple of the best shift value used to decrypt the message
         and the decrypted message text using that shift value
         '''
-        pass #delete this line and replace with your code here
+
+        # stores the original message to decode
+        originalText = self.message_text
+        # creates list where words will be validated
+        tempDecrypt = []
+        # counts how many words in this shift case
+        wordCounter = 0
+        # keeps track of the best case
+        bestShift = 0
+        bestCount = 0
+
+        # goes through each shift (other than 0 and 26)
+        for i in range(1, 25):
+            # makes a list of the words with shift i
+            tempDecrypt = self.apply_shift(i).split(" ")
+            # resets count each loopthrough
+            wordCounter = 0
+            # loops through each word while keeping count of valid words
+            for words in tempDecrypt:
+                if is_word(self.valid_words, words):
+                    wordCounter += 1
+            # if count is higher than best, it becomes the new best
+            if wordCounter > bestCount:
+                bestShift = i
+                bestCount = wordCounter
+            # undoes the shift
+            self.message_text = originalText
+        
+        # applies the best shift
+        decryptedText = self.apply_shift(bestShift)
+        # makes the tuple with bestShift value and decrypted message
+        bestValue = (bestShift, decryptedText)
+        
+        return bestValue
 
 if __name__ == '__main__':
+    #    #Example test case (PlaintextMessage)
+    #    plaintext = PlaintextMessage('hello', 2)
+    #    print('Expected Output: jgnnq')
+    #    print('Actual Output:', plaintext.get_message_text_encrypted())
+    #
+    #    #Example test case (CiphertextMessage)
+    #    ciphertext = CiphertextMessage('jgnnq')
+    #    print('Expected Output:', (24, 'hello'))
+    #    print('Actual Output:', ciphertext.decrypt_message())
 
-#    #Example test case (PlaintextMessage)
-#    plaintext = PlaintextMessage('hello', 2)
-#    print('Expected Output: jgnnq')
-#    print('Actual Output:', plaintext.get_message_text_encrypted())
-#
-#    #Example test case (CiphertextMessage)
-#    ciphertext = CiphertextMessage('jgnnq')
-#    print('Expected Output:', (24, 'hello'))
-#    print('Actual Output:', ciphertext.decrypt_message())
 
-    #TODO: WRITE YOUR TEST CASES HERE
-
-    #TODO: best shift value and unencrypted story 
+    # PlaintextMessage test case 1
+    plaintext1 = PlaintextMessage('Testing, Case.', 4)
+    print('Expected Output: Xiwxmrk, Gewi.')
+    print('Actual Output:', plaintext1.get_message_text_encrypted())
+    # PlaintextMessage test case 2
+    plaintext2 = PlaintextMessage('The quick brown fox jumps over the lazy dog.', 12)
+    print('Expected Output: Ftq cguow ndaiz raj vgybe ahqd ftq xmlk pas.')
+    print('Actual Output:', plaintext2.get_message_text_encrypted())
     
-    pass #delete this line and replace with your code here
+    # CiphertextMessage test case 1
+    ciphertext1 = CiphertextMessage('Ftq cguow ndaiz raj vgybe ahqd ftq xmlk pas.')
+    print('Expected Output:', (14, 'The quick brown fox jumps over the lazy dog.'))
+    print('Actual Output:', ciphertext1.decrypt_message())
+    # CiphertextMessage test case 2
+    ciphertext2 = CiphertextMessage('Xiwxmrk, gewi.')
+    print('Expected Output:', (22, 'Testing, Case.'))
+    print('Actual Output:', ciphertext2.decrypt_message())
+
+    # storyCipher = CiphertextMessage(get_story_string())
+    # print(storyCipher.decrypt_message())
+
+# story.txt: best shift value was 12
+# (12, 'Jack Florey is a mythical character created on the spur of a moment to help cover an 
+# insufficiently planned hack. He has been registered for classes at MIT twice before, 
+# but has reportedly never passed aclass. It has been the tradition of the residents of 
+# East Campus to become Jack Florey for a few nights each year to educate incoming students 
+# in the ways, means, and ethics of hacking.')
