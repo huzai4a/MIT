@@ -1,7 +1,7 @@
 # Problem Set 4B
-# Name: <your name here>
-# Collaborators:
-# Time Spent: x:xx
+# Name: Huzaifa Syed
+# Collaborators: - 
+# Time Spent: 2 hrs
 
 from pathlib import Path
 import string
@@ -82,6 +82,14 @@ class Message(object):
         Returns: self.message_text
         '''
         return self.message_text
+    
+    def set_message_text(self, text):
+        '''
+        Used to safely set self.message_text outside of the class
+        
+        Returns: none
+        '''
+        self.message_text = text
 
     def get_valid_words(self):
         '''
@@ -142,7 +150,7 @@ class Message(object):
         # strings are immutable, so list joining is more efficient
         codedMessage = []
 
-        for letters in self.message_text:
+        for letters in self.get_message_text():
             # if letter is alphabetical, shift
             if letters.isalpha():
                 codedMessage.append(shiftedDict[letters])
@@ -250,7 +258,7 @@ class CiphertextMessage(Message):
         '''
 
         # stores the original message to decode
-        originalText = self.message_text
+        originalText = self.get_message_text()
         # creates list where words will be validated
         tempDecrypt = []
         # counts how many words in this shift case
@@ -267,14 +275,14 @@ class CiphertextMessage(Message):
             wordCounter = 0
             # loops through each word while keeping count of valid words
             for words in tempDecrypt:
-                if is_word(self.valid_words, words):
+                if is_word(self.get_valid_words(), words):
                     wordCounter += 1
             # if count is higher than best, it becomes the new best
             if wordCounter > bestCount:
                 bestShift = i
                 bestCount = wordCounter
             # undoes the shift
-            self.message_text = originalText
+            self.set_message_text(originalText)
         
         # applies the best shift
         decryptedText = self.apply_shift(bestShift)

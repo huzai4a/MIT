@@ -1,8 +1,9 @@
 # Problem Set 4C
-# Name: <your name here>
-# Collaborators:
-# Time Spent: x:xx
+# Name: Huzaifa Syed
+# Collaborators: -
+# Time Spent: 
 
+from pathlib import Path
 import string
 from ps4a import get_permutations
 
@@ -18,14 +19,14 @@ def load_words(file_name):
     take a while to finish.
     '''
     
-    print("Loading word list from file...")
+    # print("Loading word list from file...")
     # inFile: file
     inFile = open(file_name, 'r')
     # wordlist: list of strings
     wordlist = []
     for line in inFile:
         wordlist.extend([word.lower() for word in line.split(' ')])
-    print("  ", len(wordlist), "words loaded.")
+    # print("  ", len(wordlist), "words loaded.")
     return wordlist
 
 def is_word(word_list, word):
@@ -51,7 +52,7 @@ def is_word(word_list, word):
 
 ### END HELPER CODE ###
 
-WORDLIST_FILENAME = 'words.txt'
+WORDLIST_FILENAME = Path(__file__).with_name('words.txt')
 
 # you may find these constants helpful
 VOWELS_LOWER = 'aeiou'
@@ -70,7 +71,9 @@ class SubMessage(object):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        
+        self.message_text = text
+        self.valid_words = load_words(WORDLIST_FILENAME)
     
     def get_message_text(self):
         '''
@@ -78,7 +81,8 @@ class SubMessage(object):
         
         Returns: self.message_text
         '''
-        pass #delete this line and replace with your code here
+        
+        return self.message_text
 
     def get_valid_words(self):
         '''
@@ -87,7 +91,8 @@ class SubMessage(object):
         
         Returns: a COPY of self.valid_words
         '''
-        pass #delete this line and replace with your code here
+        
+        return self.valid_words.copy()
                 
     def build_transpose_dict(self, vowels_permutation):
         '''
@@ -108,9 +113,23 @@ class SubMessage(object):
         Returns: a dictionary mapping a letter (string) to 
                  another letter (string). 
         '''
+
+        # the dictionary to be returned
+        letterDict = {}
+
+        # for each vowel
+        for i in range(len(VOWELS_LOWER)):
+            # sets the corresponding vowel to the provided letters in corresponding order
+            letterDict[VOWELS_LOWER[i]] = vowels_permutation[i]
+            letterDict[VOWELS_UPPER[i]] = vowels_permutation[i].upper()
         
-        pass #delete this line and replace with your code here
-    
+        # assigns all non-vowels to themselves
+        for letters in CONSONANTS_LOWER:
+            letterDict[letters] = letters
+            letterDict[letters.upper()] = letters.upper()
+        
+        return letterDict
+
     def apply_transpose(self, transpose_dict):
         '''
         transpose_dict (dict): a transpose dictionary
@@ -119,7 +138,20 @@ class SubMessage(object):
         on the dictionary
         '''
         
-        pass #delete this line and replace with your code here
+        # initializes list to hold each letter
+        appliedTranspose = []
+        # for each character in the message
+        for letters in self.get_message_text():
+            # if the character is alphabetical add its 
+            # corresponding letter from the dictionary
+            if letters.isalpha():
+                appliedTranspose.append(transpose_dict[letters])
+            # otherwise add the character itself
+            else:
+                appliedTranspose.append(letters)
+
+        # returns a string by joining the appliedTranspose list
+        return ''.join(appliedTranspose)
         
 class EncryptedSubMessage(SubMessage):
     def __init__(self, text):
