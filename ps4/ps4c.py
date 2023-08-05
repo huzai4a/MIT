@@ -83,6 +83,14 @@ class SubMessage(object):
         '''
         
         return self.message_text
+    
+    def set_message_text(self, text):
+        '''
+        Used to safely set self.message_text outside of the class
+        
+        Returns: none
+        '''
+        self.message_text = text
 
     def get_valid_words(self):
         '''
@@ -114,9 +122,11 @@ class SubMessage(object):
                  another letter (string). 
         '''
 
+        # note to self: the vowels_permutation string can only be 
+        # a rearranged version of the vowels, thats all it is
+
         # the dictionary to be returned
         letterDict = {}
-
         # for each vowel
         for i in range(len(VOWELS_LOWER)):
             # sets the corresponding vowel to the provided letters in corresponding order
@@ -164,7 +174,8 @@ class EncryptedSubMessage(SubMessage):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+
+        SubMessage.__init__(self, text)
 
     def decrypt_message(self):
         '''
@@ -184,19 +195,102 @@ class EncryptedSubMessage(SubMessage):
         
         Hint: use your function from Part 4A
         '''
-        pass #delete this line and replace with your code here
+        
+        # creates a list of all permutations of the vowels
+        vowelPermList = get_permutations(VOWELS_LOWER)
+        # initializes the integers needed for bests
+        bestCount = 0
+        bestIndex = 0
+        # stores the original message to decode
+        originalText = self.get_message_text()
+        # creates list where words will be validated
+        tempDecrypt = []
+
+        for permutations in vowelPermList:
+            # resets count to 0 each loopthrough
+            wordCounter = 0
+            # creates new dictionary based on new permutation of vowels
+            tempDict = self.build_transpose_dict(permutations)
+
+            # fills list with 'decrypted' words from message
+            tempDecrypt = self.apply_transpose(tempDict).split(" ")
+
+            # for each word in decrypted list
+            for words in tempDecrypt:
+                # if the word is valid add to count
+                if is_word(self.get_valid_words(), words):
+                    wordCounter += 1
+            
+            # if there are more words than the current best decryption,
+            # there shall be a new best decryption
+            if wordCounter > bestCount:
+                bestCount = wordCounter
+                bestIndex = vowelPermList.index(permutations)
+
+            # at the end of each loop reset the message to its original encryption
+            self.set_message_text(originalText)
+
+        # if the word count is 0 no permutations worked; send back original string
+        if bestCount == 0:
+            return self.get_message_text()
+        else:
+            # creates new dictionary based on vowel permutation
+            # that formed the most words
+            tempDict = self.build_transpose_dict(vowelPermList[bestIndex])
+            return self.apply_transpose(tempDict)
+
+
+
+
     
 
 if __name__ == '__main__':
 
     # Example test case
-    message = SubMessage("Hello World!")
-    permutation = "eaiuo"
-    enc_dict = message.build_transpose_dict(permutation)
-    print("Original message:", message.get_message_text(), "Permutation:", permutation)
-    print("Expected encryption:", "Hallu Wurld!")
-    print("Actual encryption:", message.apply_transpose(enc_dict))
-    enc_message = EncryptedSubMessage(message.apply_transpose(enc_dict))
-    print("Decrypted message:", enc_message.decrypt_message())
+    # message = SubMessage("Hello World!")
+    # permutation = "eaiuo"
+    # enc_dict = message.build_transpose_dict(permutation)
+    # print("Original message:", message.get_message_text(), "Permutation:", permutation)
+    # print("Expected encryption:", "Hallu Wurld!")
+    # print("Actual encryption:", message.apply_transpose(enc_dict))
+    # enc_message = EncryptedSubMessage(message.apply_transpose(enc_dict))
+    # print("Decrypted message:", enc_message.decrypt_message())
      
-    #TODO: WRITE YOUR TEST CASES HERE
+    # SubMessage test case 1
+    message1 = SubMessage("Crazy? I was crazy once.")
+    permutation1 = "uoiea"
+    #              "aeiou"
+    enc_dict = message1.build_transpose_dict(permutation1)
+    print("Original message:", message1.get_message_text(), "Permutation:", permutation1)
+    print("Expected encryption:", "Cruzy? I wus cruzy enco.")
+    print("Actual encryption:", message1.apply_transpose(enc_dict))
+    # SubMessage test case 2
+    message2 = SubMessage("The quick brown fox jumped over a lazy dog.")
+    permutation2 = "oieua"
+    #              "aeiou"
+    enc_dict = message2.build_transpose_dict(permutation2)
+    print("Original message:", message2.get_message_text(), "Permutation:", permutation2)
+    print("Expected encryption:", "Thi qaeck bruwn fux jampid uvir o lozy dug.")
+    print("Actual encryption:", message2.apply_transpose(enc_dict))
+
+    # EncryptedSubMessage test case 1
+    enc_message = EncryptedSubMessage("Qoeck santanca fur tast cisa.")
+    print("Input message:", enc_message.get_message_text())
+    print("Expected decryption:", "Quick sentence for test case.")
+    print("Decrypted message:", enc_message.decrypt_message())
+    # EncryptedSubMessage test case 2
+    enc_message2 = EncryptedSubMessage("Hulla, O jest fonoshud hogh schaal!")
+    print("Input message:", enc_message2.get_message_text())
+    print("Expected decryption:", "Hello, I just finished high school!")
+    print("Decrypted message:", enc_message2.decrypt_message())
+
+# test 1
+# Quick sentence for test case.
+# Qoeck santanca fur tast cisa.
+# iaeuo
+# aeiou
+# test 2
+# Hello, I just finished high school!
+# Hulla, O jest fonoshud hogh schaal!
+# iuoae
+# aeiou
