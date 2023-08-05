@@ -1,7 +1,7 @@
 # Problem Set 4C
 # Name: Huzaifa Syed
 # Collaborators: -
-# Time Spent: 
+# Time Spent: 2 hrs
 
 from pathlib import Path
 import string
