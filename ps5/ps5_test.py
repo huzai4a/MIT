@@ -1,8 +1,10 @@
 # 6.00
 # Problem Set 5 Test Suite
 import unittest
-from ps5 import *
-from datetime import timedelta
+# from .ps5 import NewsStory
+import ps5
+from datetime import timedelta, datetime
+
 
 
 class ProblemSet5NewsStory(unittest.TestCase):
@@ -10,30 +12,30 @@ class ProblemSet5NewsStory(unittest.TestCase):
         pass
 
     def testNewsStoryConstructor(self):
-        story = NewsStory('', '', '', '', datetime.now())
+        story = ps5.NewsStory('', '', '', '', datetime.now())
 
     def testNewsStoryGetGuid(self):
-        story = NewsStory('test guid', 'test title', 
+        story = ps5.NewsStory('test guid', 'test title', 
                           'test description', 'test link', datetime.now())
         self.assertEqual(story.get_guid(), 'test guid')
 
     def testNewsStoryGetTitle(self):
-        story = NewsStory('test guid', 'test title', 
+        story = ps5.NewsStory('test guid', 'test title', 
                           'test description', 'test link', datetime.now())
         self.assertEqual(story.get_title(), 'test title')
 
     def testNewsStoryGetdescription(self):
-        story = NewsStory('test guid', 'test title', 
+        story = ps5.NewsStory('test guid', 'test title', 
                           'test description', 'test link', datetime.now())
         self.assertEqual(story.get_description(), 'test description')
 
     def testNewsStoryGetLink(self):
-        story = NewsStory('test guid', 'test title', 
+        story = ps5.NewsStory('test guid', 'test title', 
                           'test description', 'test link', datetime.now())
         self.assertEqual(story.get_link(), 'test link')
 
     def testNewsStoryGetTime(self):
-        story = NewsStory('test guid', 'test title', 
+        story = ps5.NewsStory('test guid', 'test title', 
                           'test description', 'test link', datetime.now())
         self.assertEqual(type(story.get_pubdate()), datetime)
         
@@ -51,22 +53,22 @@ class ProblemSet5(unittest.TestCase):
         self.ft2 = FalseTrigger()
 
     def test1TitleTrigger(self):
-        cuddly    = NewsStory('', 'The purple cow is soft and cuddly.', '', '', datetime.now())
-        exclaim   = NewsStory('', 'Purple!!! Cow!!!', '', '', datetime.now())
-        symbols   = NewsStory('', 'purple@#$%cow', '', '', datetime.now())
-        spaces    = NewsStory('', 'Did you see a purple     cow?', '', '', datetime.now())
-        caps      = NewsStory('', 'The farmer owns a really PURPLE cow.', '', '', datetime.now())
-        exact     = NewsStory('', 'purple cow', '', '', datetime.now())
+        cuddly    = ps5.NewsStory('', 'The purple cow is soft and cuddly.', '', '', datetime.now())
+        exclaim   = ps5.NewsStory('', 'Purple!!! Cow!!!', '', '', datetime.now())
+        symbols   = ps5.NewsStory('', 'purple@#$%cow', '', '', datetime.now())
+        spaces    = ps5.NewsStory('', 'Did you see a purple     cow?', '', '', datetime.now())
+        caps      = ps5.NewsStory('', 'The farmer owns a really PURPLE cow.', '', '', datetime.now())
+        exact     = ps5.NewsStory('', 'purple cow', '', '', datetime.now())
 
-        plural    = NewsStory('', 'Purple cows are cool!', '', '', datetime.now())
-        separate  = NewsStory('', 'The purple blob over there is a cow.', '', '', datetime.now())
-        brown     = NewsStory('', 'How now brown cow.', '' ,'', datetime.now())
-        badorder  = NewsStory('', 'Cow!!! Purple!!!', '', '', datetime.now())
-        nospaces  = NewsStory('', 'purplecowpurplecowpurplecow', '', '', datetime.now())
-        nothing   = NewsStory('', 'I like poison dart frogs.', '', '', datetime.now())
+        plural    = ps5.NewsStory('', 'Purple cows are cool!', '', '', datetime.now())
+        separate  = ps5.NewsStory('', 'The purple blob over there is a cow.', '', '', datetime.now())
+        brown     = ps5.NewsStory('', 'How now brown cow.', '' ,'', datetime.now())
+        badorder  = ps5.NewsStory('', 'Cow!!! Purple!!!', '', '', datetime.now())
+        nospaces  = ps5.NewsStory('', 'purplecowpurplecowpurplecow', '', '', datetime.now())
+        nothing   = ps5.NewsStory('', 'I like poison dart frogs.', '', '', datetime.now())
 
-        s1 = TitleTrigger('PURPLE COW')
-        s2  = TitleTrigger('purple cow')
+        s1 = ps5.TitleTrigger('PURPLE COW')
+        s2  = ps5.TitleTrigger('purple cow')
         for trig in [s1, s2]:
             self.assertTrue(trig.evaluate(cuddly), "TitleTrigger failed to fire when the phrase appeared in the title.")
             self.assertTrue(trig.evaluate(exclaim), "TitleTrigger failed to fire when the words were separated by exclamation marks.")
@@ -83,22 +85,22 @@ class ProblemSet5(unittest.TestCase):
             self.assertFalse(trig.evaluate(nothing), "TitleTrigger fired when none of the words in the phrase appeared.")
 
     def test2DescriptionTrigger(self):
-        cuddly    = NewsStory('', '', 'The purple cow is soft and cuddly.', '', datetime.now())
-        exclaim   = NewsStory('', '', 'Purple!!! Cow!!!', '', datetime.now())
-        symbols   = NewsStory('', '', 'purple@#$%cow', '', datetime.now())
-        spaces    = NewsStory('', '', 'Did you see a purple     cow?', '', datetime.now())
-        caps      = NewsStory('', '', 'The farmer owns a really PURPLE cow.', '', datetime.now())
-        exact     = NewsStory('', '', 'purple cow', '', datetime.now())
+        cuddly    = ps5.NewsStory('', '', 'The purple cow is soft and cuddly.', '', datetime.now())
+        exclaim   = ps5.NewsStory('', '', 'Purple!!! Cow!!!', '', datetime.now())
+        symbols   = ps5.NewsStory('', '', 'purple@#$%cow', '', datetime.now())
+        spaces    = ps5.NewsStory('', '', 'Did you see a purple     cow?', '', datetime.now())
+        caps      = ps5.NewsStory('', '', 'The farmer owns a really PURPLE cow.', '', datetime.now())
+        exact     = ps5.NewsStory('', '', 'purple cow', '', datetime.now())
 
-        plural    = NewsStory('', '', 'Purple cows are cool!', '', datetime.now())
-        separate  = NewsStory('', '', 'The purple blob over there is cow.', '', datetime.now())
-        brown     = NewsStory('', '', 'How now brown cow.', '', datetime.now())
-        badorder  = NewsStory('', '', 'Cow!!! Purple!!!', '', datetime.now())
-        nospaces  = NewsStory('', '', 'purplecowpurplecowpurplecow', '', datetime.now())
-        nothing   = NewsStory('', '', 'I like poison dart frogs.', '', datetime.now())
+        plural    = ps5.NewsStory('', '', 'Purple cows are cool!', '', datetime.now())
+        separate  = ps5.NewsStory('', '', 'The purple blob over there is cow.', '', datetime.now())
+        brown     = ps5.NewsStory('', '', 'How now brown cow.', '', datetime.now())
+        badorder  = ps5.NewsStory('', '', 'Cow!!! Purple!!!', '', datetime.now())
+        nospaces  = ps5.NewsStory('', '', 'purplecowpurplecowpurplecow', '', datetime.now())
+        nothing   = ps5.NewsStory('', '', 'I like poison dart frogs.', '', datetime.now())
 
-        s1 = DescriptionTrigger('PURPLE COW')
-        s2  = DescriptionTrigger('purple cow')
+        s1 = ps5.DescriptionTrigger('PURPLE COW')
+        s2  = ps5.DescriptionTrigger('purple cow')
         for trig in [s1, s2]:
             self.assertTrue(trig.evaluate(cuddly), "DescriptionTrigger failed to fire when the phrase appeared in the description.")
             self.assertTrue(trig.evaluate(exclaim), "DescriptionTrigger failed to fire when the words were separated by exclamation marks.")
@@ -118,22 +120,22 @@ class ProblemSet5(unittest.TestCase):
 
         dt = timedelta(seconds=5)
         now = datetime(2016, 10, 12, 23, 59, 59)
-        now = now.replace(tzinfo=pytz.timezone("EST"))
+        now = now.replace(tzinfo=ps5.pytz.timezone("EST"))
         
         ancient_time = datetime(1987, 10, 15)
-        ancient_time = ancient_time.replace(tzinfo=pytz.timezone("EST"))
-        ancient = NewsStory('', '', '', '', ancient_time)
+        ancient_time = ancient_time.replace(tzinfo=ps5.pytz.timezone("EST"))
+        ancient = ps5.NewsStory('', '', '', '', ancient_time)
         
-        just_now = NewsStory('', '', '', '', now - dt)
-        in_a_bit = NewsStory('', '', '', '', now + dt)
+        just_now = ps5.NewsStory('', '', '', '', now - dt)
+        in_a_bit = ps5.NewsStory('', '', '', '', now + dt)
         
         future_time = datetime(2087, 10, 15)
-        future_time = future_time.replace(tzinfo=pytz.timezone("EST"))
-        future = NewsStory('', '', '', '', future_time)
+        future_time = future_time.replace(tzinfo=ps5.pytz.timezone("EST"))
+        future = ps5.NewsStory('', '', '', '', future_time)
 
 
-        s1 = BeforeTrigger('12 Oct 2016 23:59:59')
-        s2 = AfterTrigger('12 Oct 2016 23:59:59')
+        s1 = ps5.BeforeTrigger('12 Oct 2016 23:59:59')
+        s2 = ps5.AfterTrigger('12 Oct 2016 23:59:59')
 
         self.assertTrue(s1.evaluate(ancient), "BeforeTrigger failed to fire on news from long ago")
         self.assertTrue(s1.evaluate(just_now), "BeforeTrigger failed to fire on news happened right before specified time")
@@ -151,13 +153,13 @@ class ProblemSet5(unittest.TestCase):
 
         dt = timedelta(seconds=5)
         now = datetime(2016, 10, 12, 23, 59, 59)
-        ancient = NewsStory('', '', '', '', datetime(1987, 10, 15))
-        just_now = NewsStory('', '', '', '', now - dt)
-        in_a_bit = NewsStory('', '', '', '', now + dt)
-        future = NewsStory('', '', '', '', datetime(2087, 10, 15))
+        ancient = ps5.NewsStory('', '', '', '', datetime(1987, 10, 15))
+        just_now = ps5.NewsStory('', '', '', '', now - dt)
+        in_a_bit = ps5.NewsStory('', '', '', '', now + dt)
+        future = ps5.NewsStory('', '', '', '', datetime(2087, 10, 15))
 
-        s1 = BeforeTrigger('12 Oct 2016 23:59:59')
-        s2 = AfterTrigger('12 Oct 2016 23:59:59')
+        s1 = ps5.BeforeTrigger('12 Oct 2016 23:59:59')
+        s2 = ps5.AfterTrigger('12 Oct 2016 23:59:59')
 
         self.assertTrue(s1.evaluate(ancient), "BeforeTrigger failed to fire on news from long ago")
         self.assertTrue(s1.evaluate(just_now), "BeforeTrigger failed to fire on news happened right before specified time")
@@ -172,20 +174,20 @@ class ProblemSet5(unittest.TestCase):
         self.assertTrue(s2.evaluate(future), "AfterTrigger failed to fire on news from long ago")
 
     def test4NotTrigger(self):
-        n = NotTrigger(self.tt)
-        b = NewsStory("guid", "title", "description", "link", datetime.now())
+        n = ps5.NotTrigger(self.tt)
+        b = ps5.NewsStory("guid", "title", "description", "link", datetime.now())
 
         self.assertFalse(n.evaluate(b), "A NOT trigger applied to 'always true' DID NOT return false")
 
-        y = NotTrigger(self.ft)
+        y = ps5.NotTrigger(self.ft)
         self.assertTrue(y.evaluate(b), "A NOT trigger applied to 'always false' DID NOT return true")
 
     def test5AndTrigger(self):
-        yy = AndTrigger(self.tt, self.tt2)
-        yn = AndTrigger(self.tt, self.ft)
-        ny = AndTrigger(self.ft, self.tt)
-        nn = AndTrigger(self.ft, self.ft2)
-        b = NewsStory("guid", "title", "description", "link", datetime.now())
+        yy = ps5.AndTrigger(self.tt, self.tt2)
+        yn = ps5.AndTrigger(self.tt, self.ft)
+        ny = ps5.AndTrigger(self.ft, self.tt)
+        nn = ps5.AndTrigger(self.ft, self.ft2)
+        b = ps5.NewsStory("guid", "title", "description", "link", datetime.now())
 
         self.assertTrue(yy.evaluate(b), "AND of 'always true' and 'always true' should be true")
         self.assertFalse(yn.evaluate(b), "AND of 'always true' and 'always false' should be false")
@@ -193,11 +195,11 @@ class ProblemSet5(unittest.TestCase):
         self.assertFalse(nn.evaluate(b), "AND of 'always false' and 'always false' should be false")
 
     def test6OrTrigger(self):
-        yy = OrTrigger(self.tt, self.tt2)
-        yn = OrTrigger(self.tt, self.ft)
-        ny = OrTrigger(self.ft, self.tt)
-        nn = OrTrigger(self.ft, self.ft2)
-        b = NewsStory("guid", "title", "description", "link", datetime.now())
+        yy = ps5.OrTrigger(self.tt, self.tt2)
+        yn = ps5.OrTrigger(self.tt, self.ft)
+        ny = ps5.OrTrigger(self.ft, self.tt)
+        nn = ps5.OrTrigger(self.ft, self.ft2)
+        b = ps5.NewsStory("guid", "title", "description", "link", datetime.now())
 
         self.assertTrue(yy.evaluate(b), "OR of 'always true' and 'always true' should be true")
         self.assertTrue(yn.evaluate(b), "OR of 'always true' and 'always false' should be true")
@@ -205,40 +207,40 @@ class ProblemSet5(unittest.TestCase):
         self.assertFalse(nn.evaluate(b), "OR of 'always false' and 'always false' should be false")
 
     def test7FilterStories(self):
-        tt = TitleTrigger("New York City")
-        a = NewsStory('', "asfd New York City asfdasdfasdf", '', '', datetime.now())
-        b = NewsStory('', "asdfasfd new york city! asfdasdfasdf", '', '', datetime.now())
-        noa = NewsStory('', "something somethingnew york city", '', '', datetime.now())
-        nob = NewsStory('', "something something new york cities", '', '', datetime.now())
+        tt = ps5.TitleTrigger("New York City")
+        a = ps5.NewsStory('', "asfd New York City asfdasdfasdf", '', '', datetime.now())
+        b = ps5.NewsStory('', "asdfasfd new york city! asfdasdfasdf", '', '', datetime.now())
+        noa = ps5.NewsStory('', "something somethingnew york city", '', '', datetime.now())
+        nob = ps5.NewsStory('', "something something new york cities", '', '', datetime.now())
 
-        st = DescriptionTrigger("New York City")
-        a = NewsStory('', '', "asfd New York City asfdasdfasdf", '', datetime.now())
-        b = NewsStory('', '', "asdfasfd new york city! asfdasdfasdf", '', datetime.now())
-        noa = NewsStory('', '', "something somethingnew york city", '', datetime.now())
-        nob = NewsStory('', '', "something something new york cities", '', datetime.now())
+        st = ps5.DescriptionTrigger("New York City")
+        a = ps5.NewsStory('', '', "asfd New York City asfdasdfasdf", '', datetime.now())
+        b = ps5.NewsStory('', '', "asdfasfd new york city! asfdasdfasdf", '', datetime.now())
+        noa = ps5.NewsStory('', '', "something somethingnew york city", '', datetime.now())
+        nob = ps5.NewsStory('', '', "something something new york cities", '', datetime.now())
 
         triggers = [tt, st, self.tt, self.ft]
         stories = [a, b, noa, nob]
-        filtered_stories = filter_stories(stories, triggers)
+        filtered_stories = ps5.filter_stories(stories, triggers)
         for story in stories:
             self.assertTrue(story in filtered_stories)
-        filtered_stories = filter_stories(stories, [self.ft])
+        filtered_stories = ps5.filter_stories(stories, [self.ft])
         self.assertEqual(len(filtered_stories), 0)
 
     def test8FilterStories2(self):
-        a = NewsStory('', "asfd New York City asfdasdfasdf", '', '', datetime.now())
-        b = NewsStory('', "asdfasfd new york city! asfdasdfasdf", '', '', datetime.now())
-        noa = NewsStory('', "something somethingnew york city", '', '', datetime.now())
-        nob = NewsStory('', "something something new york cities", '', '', datetime.now())
+        a = ps5.NewsStory('', "asfd New York City asfdasdfasdf", '', '', datetime.now())
+        b = ps5.NewsStory('', "asdfasfd new york city! asfdasdfasdf", '', '', datetime.now())
+        noa = ps5.NewsStory('', "something somethingnew york city", '', '', datetime.now())
+        nob = ps5.NewsStory('', "something something new york cities", '', '', datetime.now())
 
-        class MatchTrigger(Trigger):
+        class MatchTrigger(ps5.Trigger):
             def __init__(self, story):
                 self.story = story
             def evaluate(self, story):
                 return story == self.story
         triggers = [MatchTrigger(a), MatchTrigger(nob)]
         stories = [a, b, noa, nob]
-        filtered_stories = filter_stories(stories, triggers)
+        filtered_stories = ps5.filter_stories(stories, triggers)
         self.assertTrue(a in filtered_stories)
         self.assertTrue(nob in filtered_stories)
         self.assertEqual(2, len(filtered_stories))

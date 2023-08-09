@@ -54,7 +54,75 @@ def process(url):
 
 # Problem 1
 
-# TODO: NewsStory
+class NewsStory (object):
+    def __init__ (self, guid, title, description, link, pubdate=None):
+        '''
+        Initializes a NewsStory object
+                
+        guid (string): the global unique identifier
+        title (string): The title of the article
+        description (string): a paragraph or so description of the article
+        link (string): links to the additional content surrounding the article
+        pubdate (datetime): the publication date of the article, defaults to none if no date
+
+        A NewsStory object has five attributes:
+            self.guid (string, determined by input guid)
+            self.title (string, determined by input title)
+            self.description (string, determined by input description)
+            self.link (string, determined by input link)
+            self.pubdate(datetime, determined by input pubdate)
+        '''
+
+        self.guid = guid
+        self.title = title
+        self.description = description
+        self.link = link
+        self.pubdate = pubdate
+    
+    def get_guid(self):
+        '''
+        Used to safely access self.guid outside of the class
+        
+        Returns: self.guid
+        '''
+        
+        return self.guid
+    
+    def get_title(self):
+        '''
+        Used to safely access self.title outside of the class
+        
+        Returns: self.title
+        '''
+        
+        return self.title
+    
+    def get_description(self):
+        '''
+        Used to safely access self.description outside of the class
+        
+        Returns: self.description
+        '''
+        
+        return self.description
+    
+    def get_link(self):
+        '''
+        Used to safely access self.link outside of the class
+        
+        Returns: self.link
+        '''
+        
+        return self.link
+    
+    def get_pubdate(self):
+        '''
+        Used to safely access self.pubdate outside of the class
+        
+        Returns: self.pubdate
+        '''
+        
+        return self.pubdate
 
 
 #======================
