@@ -153,9 +153,11 @@ class PhraseTrigger (Trigger):
 
         self.phrase = phrase.lower()
 
-    def in_text(self, text):
+    def is_phrase_in(self, text):
         """
         Checks whether self.phrase is in the inputted text
+
+        text (string): The text to find the phrase in
 
         Returns: True or False
         """
@@ -165,12 +167,16 @@ class PhraseTrigger (Trigger):
         for puncs in string.punctuation:
             # each punctuation is replaced with a space
             # note: strings are immutable, this is inefficient
-            tempString.replace(puncs, " ")
+            tempString = tempString.replace(puncs, " ")
             
         # splits tempString into list of words
         strippedWords = tempString.split(" ")
         # splits the phrase into a list of words
         splitPhrase = self.phrase.split(" ")
+
+        # while there are empty list elements remove them
+        while '' in strippedWords:
+            strippedWords.remove('')
 
         # if any of the phrase words aren't in the list, there's no match
         if splitPhrase[0] not in strippedWords:
@@ -185,7 +191,8 @@ class PhraseTrigger (Trigger):
                     index = strippedWords.index(textWords)
                     # start a loop count at 1, so as to check the 2nd element of splitPhrase first
                     for i in range(1, len(splitPhrase)):
-                        index += 1
+                        if index < len(strippedWords)-1:
+                            index += 1
                         if splitPhrase[i] == strippedWords[index]:
                             # if the last word of the phrase string has been reached
                             # the full phrase is in the text
@@ -201,18 +208,46 @@ class PhraseTrigger (Trigger):
             
 
 # Problem 3
-# TODO: TitleTrigger
+class TitleTrigger (PhraseTrigger):
+    def evaluate(self, news):
+        """
+        Checks whether self.phrase is in the title
+
+        news (object): The news article object to find the title in
+
+        Returns: True or False
+        """
+
+        return self.is_phrase_in(news.get_title())
 
 # Problem 4
-# TODO: DescriptionTrigger
+class DescriptionTrigger(PhraseTrigger):
+    def evaluate(self, news):
+        """
+        Checks whether self.phrase is in the description
+
+        news (object): The news article object to find the title in
+
+        Returns: True or False
+        """
+
+        return self.is_phrase_in(news.get_description())
 
 # TIME TRIGGERS
 
 # Problem 5
-# TODO: TimeTrigger
-# Constructor:
-#        Input: Time has to be in EST and in the format of "%d %b %Y %H:%M:%S".
-#        Convert time from string to a datetime before saving it as an attribute.
+class TimeTrigger (Trigger):
+    def __init__ (self, time):
+        """
+        Initializes a TimeTrigger object
+
+        time (string): The time in EST as a string in the following format: '3 Oct 2016 17:00:10'
+
+        A TimeTrigger has one attribute:
+            self.time (datetime, determined by input time)
+        """
+
+        self.time = datetime.strptime(time, "%d %b %Y %H:%M:%S")
 
 # Problem 6
 # TODO: BeforeTrigger and AfterTrigger
@@ -237,7 +272,7 @@ class PhraseTrigger (Trigger):
 # Problem 10
 def filter_stories(stories, triggerlist):
     """
-    Takes in a list of NewsStory instances.
+    Takes in a list of News instances.
 
     Returns: a list of only the stories for which a trigger in triggerlist fires.
     """
