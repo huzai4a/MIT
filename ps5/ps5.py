@@ -247,10 +247,45 @@ class TimeTrigger (Trigger):
             self.time (datetime, determined by input time)
         """
 
-        self.time = datetime.strptime(time, "%d %b %Y %H:%M:%S")
+        # converts string to datetime
+        pubtime = datetime.strptime(time, "%d %b %Y %H:%M:%S")
+        # changes timezone
+        pubtime = pubtime.replace(tzinfo=pytz.timezone("EST"))
+        # sets self
+        self.pubtime = pubtime
 
 # Problem 6
-# TODO: BeforeTrigger and AfterTrigger
+class BeforeTrigger (TimeTrigger):
+    def evaluate(self, news):
+        """
+        Checks whether story is published before trigger's time
+
+        news (object): The news article object to find the pubdate in
+
+        Returns: True or False
+        """
+
+        # if the news date is less than trigger date
+        if news.get_pubdate().replace(tzinfo=pytz.timezone("EST")) < self.pubtime:
+            return True
+        else:
+            return False
+
+class AfterTrigger (TimeTrigger):
+    def evaluate(self, news):
+        """
+        Checks whether story is published after trigger's time
+
+        news (object): The news article object to find the pubdate in
+
+        Returns: True or False
+        """
+
+        # if the news date is greater than trigger date
+        if news.get_pubdate().replace(tzinfo=pytz.timezone("EST")) > self.pubtime:
+            return True
+        else:
+            return False
 
 
 # COMPOSITE TRIGGERS
