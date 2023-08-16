@@ -324,11 +324,77 @@ class NotTrigger (Trigger):
 
 
 # Problem 8
-# TODO: AndTrigger
+class AndTrigger (Trigger):
+    def __init__(self, obj1, obj2):
+        """
+        Initializes an AndTrigger object
+
+        obj1 (object): The first object that is part of the 'and'
+        obj2 (object): The second object that is part of the 'and'
+
+        An AndTrigger has two attribute:
+            self.trigger1 (object, determined by input obj1)
+            self.trigger2 (object, determined by input obj2)
+        """ 
+
+        self.trigger1 = obj1
+        self.trigger2 = obj2
+    
+    def evaluate (self, news):
+        """
+        Sends the trigger dpeending on two other triggers
+
+        news (object): The news article object
+
+        Returns: True or False
+        """
+
+        # Hold true or false depending on their respective triggers
+        result1 = self.trigger1.evaluate(news)
+        result2 = self.trigger2.evaluate(news)
+
+        # if both are true then true, otherwise false
+        if result1 and result2:
+            return True
+        else: 
+            return False
+
 
 # Problem 9
-# TODO: OrTrigger
+class OrTrigger (Trigger):
+    def __init__(self, obj1, obj2):
+        """
+        Initializes an OrTrigger object
 
+        obj1 (object): The first object that is part of the 'or'
+        obj2 (object): The second object that is part of the 'or'
+
+        An AndTrigger has two attribute:
+            self.trigger1 (object, determined by input obj1)
+            self.trigger2 (object, determined by input obj2)
+        """ 
+
+        self.trigger1 = obj1
+        self.trigger2 = obj2
+    
+    def evaluate (self, news):
+        """
+        Sends the trigger dpeending on two other triggers
+
+        news (object): The news article object
+
+        Returns: True or False
+        """
+
+        # Hold true or false depending on their respective triggers
+        result1 = self.trigger1.evaluate(news)
+        result2 = self.trigger2.evaluate(news)
+
+        # if either are true then true, otherwise false
+        if result1 or result2:
+            return True
+        else: 
+            return False
 
 #======================
 # Filtering
