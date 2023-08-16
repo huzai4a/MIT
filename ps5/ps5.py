@@ -47,6 +47,7 @@ def process(url):
 
         newsStory = NewsStory(guid, title, description, link, pubdate)
         ret.append(newsStory)
+
     return ret
 
 #======================
@@ -471,11 +472,11 @@ def main_thread(master):
     # A sample trigger list - you might need to change the phrases to correspond
     # to what is currently in the news
     try:
-        t1 = TitleTrigger("election")
-        t2 = DescriptionTrigger("trump")
-        t3 = DescriptionTrigger("clinton")
-        t4 = OrTrigger(t2, t3)
-        triggerlist = [t1, t4]
+        # t1 = TitleTrigger("election")
+        # t2 = DescriptionTrigger("trump")
+        # t3 = DescriptionTrigger("clinton")
+        # t4 = OrTrigger(t2, t3)
+        # triggerlist = [t1, t4]
 
         # Problem 11
         # TODO: After implementing read_trigger_config, uncomment this line 
