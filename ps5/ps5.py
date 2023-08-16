@@ -291,7 +291,37 @@ class AfterTrigger (TimeTrigger):
 # COMPOSITE TRIGGERS
 
 # Problem 7
-# TODO: NotTrigger
+class NotTrigger (Trigger):
+    def __init__(self, other):
+        """
+        Initializes a NotTrigger object
+
+        other (object): The object that is being 'notted'
+
+        A NotTrigger has one attribute:
+            self.trigger (object, determined by input other)
+        """ 
+
+        self.trigger = other
+    
+    def evaluate (self, news):
+        """
+        Sends the opposite trigger to the one sent in for self.trigger
+
+        news (object): The news article object
+
+        Returns: True or False
+        """
+
+        # this variable holds True or False depending on self.trigger
+        original = self.trigger.evaluate(news)
+
+        # If original trigger is true return false, vice versa
+        if original:
+            return False
+        else: 
+            return True
+
 
 # Problem 8
 # TODO: AndTrigger
